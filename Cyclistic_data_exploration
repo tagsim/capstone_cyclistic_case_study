@@ -2,56 +2,98 @@
 The first step of analysis is to combine our twelve Cyclistic monthly data Tables into a single table. This table will combine data tables from 1st April 2022
 to 31st March 2023. Total row count of.
 */
-CREATE TABLE still-tensor-378918.Bikeshare_dataset.combined_dataset AS
+CREATE TABLE `still-tensor-378918.Cyclistic_casestudy.combined_nsioa`
+(ride_id STRING, rideable_type STRING, started_at TIMESTAMP, ended_at TIMESTAMP, start_station_name STRING, start_station_id STRING, end_station_name STRING, end_station_id STRING, start_lat FLOAT64, start_lng FLOAT64, end_lat FLOAT64, end_lng FLOAT64, member_casual STRING, ride_length TIME,day_of_week INT64);
+
+INSERT INTO `still-tensor-378918.Cyclistic_casestudy.combined_nsioa` (ride_id, rideable_type, started_at, ended_at, start_station_name, start_station_id, end_station_name, end_station_id, start_lat, start_lng, end_lat, end_lng, member_casual, ride_length, day_of_week)
+(SELECT * 
+FROM
+`still-tensor-378918.Cyclistic_casestudy.202204-divvy-tripdata`
+UNION DISTINCT
+
 SELECT *
-FROM (
-  SELECT * FROM `still-tensor-378918.Bikeshare_dataset.042022-tripdata`
-  UNION ALL
-  SELECT * FROM `still-tensor-378918.Bikeshare_dataset.0520221-tripdata`
-  UNION ALL
-  SELECT * FROM `still-tensor-378918.Bikeshare_dataset.0520222-tripdata`
-  UNION ALL
-  SELECT * FROM `still-tensor-378918.Bikeshare_dataset.0520223-tripdata`
-  UNION ALL
-  SELECT * FROM `still-tensor-378918.Bikeshare_dataset.0620221-tripdata`
-  UNION ALL
-  SELECT * FROM `still-tensor-378918.Bikeshare_dataset.0620222-tripdata`
-  UNION ALL
-  SELECT * FROM `still-tensor-378918.Bikeshare_dataset.0620223-tripdata`
-  UNION ALL
-  SELECT * FROM `still-tensor-378918.Bikeshare_dataset.0720221-tripdata`
-  UNION ALL
-  SELECT * FROM `still-tensor-378918.Bikeshare_dataset.0720222-tripdata`
-  UNION ALL
-  SELECT * FROM `still-tensor-378918.Bikeshare_dataset.0720223-tripdata`
-  UNION ALL
-  SELECT * FROM `still-tensor-378918.Bikeshare_dataset.0820221-tripdata`
-  UNION ALL
-  SELECT * FROM `still-tensor-378918.Bikeshare_dataset.0820222-tripdata`
-  UNION ALL
-  SELECT * FROM `still-tensor-378918.Bikeshare_dataset.0820223-tripdata`
-  UNION ALL
-  SELECT * FROM `still-tensor-378918.Bikeshare_dataset.0920221-tripdata`
-  UNION ALL
-  SELECT * FROM `still-tensor-378918.Bikeshare_dataset.0920222-tripdata`
-  UNION ALL
-  SELECT * FROM `still-tensor-378918.Bikeshare_dataset.0920223-tripdata`
-  UNION ALL
-  SELECT * FROM `still-tensor-378918.Bikeshare_dataset.1020221-tripdata`
-  UNION ALL
-  SELECT * FROM `still-tensor-378918.Bikeshare_dataset.1020222-tripdata`
-  UNION ALL
-  SELECT * FROM `still-tensor-378918.Bikeshare_dataset.112022-tripdata`
-  UNION ALL
-  SELECT * FROM `still-tensor-378918.Bikeshare_dataset.122022-tripdata`
-  UNION ALL
-  SELECT * FROM `still-tensor-378918.Bikeshare_dataset.012023-tripdata`
-  UNION ALL
-  SELECT * FROM `still-tensor-378918.Bikeshare_dataset.022023-tripdata`
-  UNION ALL
-  SELECT * FROM `still-tensor-378918.Bikeshare_dataset.032023-tripdata`
+FROM
+`still-tensor-378918.Cyclistic_casestudy.202205-divvy-tripdata-2`
+UNION DISTINCT
+
+SELECT *
+FROM
+`still-tensor-378918.Cyclistic_casestudy.202205-divvy-tripdata-3`
+UNION DISTINCT
+
+SELECT *
+FROM
+`still-tensor-378918.Cyclistic_casestudy.2022051-divvy-tripdata`
+UNION DISTINCT
+
+SELECT *
+FROM
+`still-tensor-378918.Cyclistic_casestudy.202205-divvy-tripdata-2`
+UNION DISTINCT
+
+SELECT *
+FROM
+`still-tensor-378918.Cyclistic_casestudy.202206-divvy-tripdata-1`
+UNION DISTINCT
+
+SELECT *
+FROM
+`still-tensor-378918.Cyclistic_casestudy.2022062-divvy-dataset`
+UNION DISTINCT
+
+SELECT *
+FROM
+`still-tensor-378918.Cyclistic_casestudy.2022063-divvy-dataset`
+UNION DISTINCT
+
+SELECT *
+FROM
+`still-tensor-378918.Cyclistic_casestudy.2022071-divvy-dataset`
+UNION DISTINCT
+
+SELECT *
+FROM
+`still-tensor-378918.Cyclistic_casestudy.2022072-divvy-dataset`
+UNION DISTINCT
+
+SELECT *
+FROM
+`still-tensor-378918.Cyclistic_casestudy.2022073-divvy-dataset`
+UNION DISTINCT
+
+SELECT *
+FROM
+`still-tensor-378918.Cyclistic_casestudy.2022081-divvy-dataset`
+UNION DISTINCT
+
+SELECT *
+FROM
+`still-tensor-378918.Cyclistic_casestudy.202282-divvy-dataset`
+UNION DISTINCT
+
+SELECT *
+FROM
+`still-tensor-378918.Cyclistic_casestudy.2022083-divvy-dataset`
+UNION DISTINCT
+
+SELECT *
+FROM
+`still-tensor-378918.Cyclistic_casestudy.2022091-divvy-tripdata`
+UNION DISTINCT
+
+SELECT *
+FROM
+`still-tensor-378918.Cyclistic_casestudy.2022092-divvy-dataset`
+UNION DISTINCT
+
+SELECT *
+FROM
+`still-tensor-378918.Cyclistic_casestudy.2022093-divvy-dataset`
 );
-SELECT * FROM `still-tensor-378918.Bikeshare_dataset.combined_dataset`;
+
+
+
+
 
 /* Data Integrity check: The above code returned a merged 'combined_dataset' sheet containing 5,803,720 rows which was the original total of the twelve Cyclistic
 monthly spreadsheets individually. */
