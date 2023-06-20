@@ -1,3 +1,194 @@
 /* Cleaning of dataset - using pre-cleaning verifications as our guide.*/
 'ride_id' to be cleaned ensuring no duplication of 'ride_id' field.
 
+
+
+SELECT
+  DISTINCT(ride_id)
+FROM
+  `still-tensor-378918.Cyclistic_casestudy.combined_nsioa` ; /* However this does not provide me with information on duplicate ride_id's for cleaning*/
+SELECT
+  COUNT(ride_id) ride_id_count
+FROM
+  `still-tensor-378918.Cyclistic_casestudy.combined_nsioa`
+GROUP BY
+  ride_id
+HAVING
+  COUNT(ride_id) > 1; /* 9 rows containing duplications of 'ride_id' 9 containing one duplication each.*/ /*Second check made to ensure standardised length of 'ride_id' all totalling 16 characters in length.*/
+SELECT
+  ride_id
+FROM
+  `still-tensor-378918.Cyclistic_casestudy.combined_nsioa`
+WHERE
+  LENGTH (ride_id) > 16
+  AND LENGTH (ride_id) < 16; /*Verification for STRING values with spaces before or after value.*/
+SELECT
+  rideable_type,
+  start_station_name,
+  end_station_name,
+  member_casual
+FROM
+  `still-tensor-378918.Cyclistic_casestudy.combined_nsioa`
+WHERE
+  rideable_type LIKE ' %'
+  OR rideable_type LIKE '% '
+  OR start_station_name LIKE ' %'
+  OR rideable_type LIKE '% '
+  OR end_station_name LIKE ' %'
+  OR rideable_type LIKE '% '; /* No data containing spaces.*/ /* Checking for misspellings for fields, rideable_type, member_casual*/
+SELECT
+  DISTINCT (member_casual)
+FROM
+  `still-tensor-378918.Cyclistic_casestudy.combined_nsioa`;
+SELECT
+  DISTINCT (rideable_type)
+FROM
+  `still-tensor-378918.Cyclistic_casestudy.combined_nsioa`; /* null values to be removed' docked and classic bikes to be merged as classic.*/ /* Anomolies regarding MAX_LAT....*/
+SELECT
+  MIN (end_lng),
+  MAX (end_lng),
+  MIN (end_lat),
+  MAX (end_lat),
+  MIN (start_lng),
+  MAX (start_lng),
+  MIN (start_lat),
+  MAX (start_lat)
+FROM
+  `still-tensor-378918.Cyclistic_casestudy.combined_nsioa`; /*single row containing anomaly*/ /* 
+
+
+
+/* Query for anomalies in ride_id...*/
+SELECT
+  ride_id,
+  COUNT(1)
+FROM
+  `still-tensor-378918.Cyclistic_casestudy.combined_nsioa`
+GROUP BY
+  ride_id
+HAVING
+  COUNT(1) > 1;
+SELECT
+  rideable_type,
+  COUNT(1)
+FROM
+  `still-tensor-378918.Cyclistic_casestudy.combined_nsioa`
+GROUP BY
+  rideable_type;
+SELECT
+  end_station_id,
+  end_station_name,
+  COUNT(1)
+FROM
+  `still-tensor-378918.Cyclistic_casestudy.combined_nsioa`
+GROUP BY
+  end_station_id,
+  end_station_name; /* End station 1742 endstation names and id
+
+/* Identifying nulls in */
+SELECT
+  *
+FROM
+  `still-tensor-378918.Cyclistic_casestudy.combined_nsioa`
+WHERE
+  start_station_name IS NULL
+  OR end_station_name IS NULL;
+SELECT
+  *
+FROM
+  `still-tensor-378918.Cyclistic_casestudy.combined_nsioa`
+WHERE
+  rideable_type IS NULL;
+SELECT
+  *
+FROM
+  `still-tensor-378918.Cyclistic_casestudy.combined_nsioa`
+WHERE
+  started_at IS NULL
+  AND ended_at IS NULL;
+SELECT
+  *
+FROM
+  `still-tensor-378918.Cyclistic_casestudy.combined_nsioa`
+WHERE
+  started_at IS NULL
+  OR ended_at IS NULL;
+SELECT
+  *
+FROM
+  `still-tensor-378918.Cyclistic_casestudy.combined_nsioa`
+WHERE
+  (end_station_name IS NULL
+    OR end_station_id IS NULL);
+SELECT
+  *
+FROM
+  `still-tensor-378918.Cyclistic_casestudy.combined_nsioa`
+WHERE
+  (start_lat IS NULL
+    OR start_lng IS NULL);
+SELECT
+  *
+FROM
+  `still-tensor-378918.Cyclistic_casestudy.combined_nsioa`
+WHERE
+  (end_lat IS NULL
+    OR end_lng IS NULL);
+SELECT
+  *
+FROM
+  `still-tensor-378918.Cyclistic_casestudy.combined_nsioa`
+WHERE
+  member_casual IS NULL;
+SELECT
+  *
+FROM
+  `still-tensor-378918.Cyclistic_casestudy.combined_nsioa`
+WHERE
+  ride_length IS NULL;
+SELECT
+  *
+FROM
+  `still-tensor-378918.Cyclistic_casestudy.combined_nsioa`
+WHERE
+  day_of_week IS NULL; /* Null terms, anomalies
+
+/* Change instances of 'docked_bike' to 'classic_bike' */
+UPDATE
+  `still-tensor-378918.Cyclistic_casestudy.combined_nsioa`
+SET
+  rideable_type = 'classic_bike'
+WHERE
+  rideable_type = 'docked_bike'; /* Delete anomalies*/
+DELETE
+FROM
+  `still-tensor-378918.Cyclistic_casestudy.combined_nsioa`
+WHERE
+  ended_at < started_at;
+DELETE
+FROM
+  `still-tensor-378918.Cyclistic_casestudy.combined_nsioa`
+WHERE
+  ride_id IN (
+  SELECT
+    ride_id
+  FROM
+    `still-tensor-378918.Cyclistic_casestudy.combined_nsioa`
+  GROUP BY
+    ride_id
+  HAVING
+    COUNT(ride_id) > 1);
+DELETE
+FROM
+  `still-tensor-378918.Cyclistic_casestudy.combined_nsioa`
+WHERE
+  start_station_name IS NULL
+  OR end_station_name IS NULL;
+DELETE
+FROM
+  `still-tensor-378918.Cyclistic_casestudy.combined_nsioa`
+WHERE
+  start_station_name LIKE ('%test%')
+  OR end_station_name LIKE ('%test%')
+  OR start_station_name LIKE ('%TEST%')
+  OR end_station_name LIKE ('%TEST%');
