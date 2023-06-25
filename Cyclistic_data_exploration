@@ -2,10 +2,10 @@
 The first step of analysis is to combine our twelve Cyclistic monthly data Tables into a single table. This table will combine data tables from 1st April 2022
 to 31st March 2023. Total row count of.
 */
-CREATE TABLE `still-tensor-378918.Cyclistic_casestudy.combined_nsioa`
+CREATE TABLE `still-tensor-378918.Cyclistic_casestudy.temp_combined_data`
 (ride_id STRING, rideable_type STRING, started_at TIMESTAMP, ended_at TIMESTAMP, start_station_name STRING, start_station_id STRING, end_station_name STRING, end_station_id STRING, start_lat FLOAT64, start_lng FLOAT64, end_lat FLOAT64, end_lng FLOAT64, member_casual STRING, ride_length TIME,day_of_week INT64);
 
-INSERT INTO `still-tensor-378918.Cyclistic_casestudy.combined_nsioa` (ride_id, rideable_type, started_at, ended_at, start_station_name, start_station_id, end_station_name, end_station_id, start_lat, start_lng, end_lat, end_lng, member_casual, ride_length, day_of_week)
+INSERT INTO `still-tensor-378918.Cyclistic_casestudy.temp_combined_data` (ride_id, rideable_type, started_at, ended_at, start_station_name, start_station_id, end_station_name, end_station_id, start_lat, start_lng, end_lat, end_lng, member_casual, ride_length, day_of_week)
 (SELECT * 
 FROM
 `still-tensor-378918.Cyclistic_casestudy.202204-divvy-tripdata`
@@ -23,13 +23,9 @@ UNION DISTINCT
 
 SELECT *
 FROM
-`still-tensor-378918.Cyclistic_casestudy.2022051-divvy-tripdata`
+`still-tensor-378918.Cyclistic_casestudy.202205-divvy-tripdata-1 `
 UNION DISTINCT
 
-SELECT *
-FROM
-`still-tensor-378918.Cyclistic_casestudy.202205-divvy-tripdata-2`
-UNION DISTINCT
 
 SELECT *
 FROM
@@ -43,52 +39,88 @@ UNION DISTINCT
 
 SELECT *
 FROM
-`still-tensor-378918.Cyclistic_casestudy.2022063-divvy-dataset`
+`still-tensor-378918.Cyclistic_casestudy.2022063-divvy-dataset3`
 UNION DISTINCT
 
 SELECT *
 FROM
-`still-tensor-378918.Cyclistic_casestudy.2022071-divvy-dataset`
+`still-tensor-378918.Cyclistic_casestudy.2022071-divvy-tripdata-1`
 UNION DISTINCT
 
 SELECT *
 FROM
-`still-tensor-378918.Cyclistic_casestudy.2022072-divvy-dataset`
+`still-tensor-378918.Cyclistic_casestudy.2022072-divvy-tripdata-2 `
 UNION DISTINCT
 
 SELECT *
 FROM
-`still-tensor-378918.Cyclistic_casestudy.2022073-divvy-dataset`
+`still-tensor-378918.Cyclistic_casestudy.2022073-divvy-tripdata-3`
 UNION DISTINCT
 
 SELECT *
 FROM
-`still-tensor-378918.Cyclistic_casestudy.2022081-divvy-dataset`
+`still-tensor-378918.Cyclistic_casestudy.2022081-divvy-tripdata-1 `
 UNION DISTINCT
 
 SELECT *
 FROM
-`still-tensor-378918.Cyclistic_casestudy.202282-divvy-dataset`
+`still-tensor-378918.Cyclistic_casestudy.2022082-divvy-tripdata-2`
 UNION DISTINCT
 
 SELECT *
 FROM
-`still-tensor-378918.Cyclistic_casestudy.2022083-divvy-dataset`
+`still-tensor-378918.Cyclistic_casestudy.2022083-divvy-tripdata-3`
 UNION DISTINCT
 
 SELECT *
 FROM
-`still-tensor-378918.Cyclistic_casestudy.2022091-divvy-tripdata`
+`still-tensor-378918.Cyclistic_casestudy.2022091-divvy-dataset`
 UNION DISTINCT
 
 SELECT *
 FROM
-`still-tensor-378918.Cyclistic_casestudy.2022092-divvy-dataset`
+`still-tensor-378918.Cyclistic_casestudy.2022092-divvy-publictripdata-2`
 UNION DISTINCT
 
 SELECT *
 FROM
-`still-tensor-378918.Cyclistic_casestudy.2022093-divvy-dataset`
+`still-tensor-378918.Cyclistic_casestudy.2022093-divvy-publictripdata-3 `
+UNION DISTINCT
+
+SELECT *
+FROM
+`still-tensor-378918.Cyclistic_casestudy.2022101-divvy-dataset`
+UNION DISTINCT
+
+SELECT *
+FROM
+`still-tensor-378918.Cyclistic_casestudy.2022102-divvy-dataset`
+UNION DISTINCT
+
+SELECT *
+FROM
+`still-tensor-378918.Cyclistic_casestudy.2022111-divvy-dataset`
+UNION DISTINCT
+
+SELECT *
+FROM
+`still-tensor-378918.Cyclistic_casestudy.2022121-divvy-dataset`
+UNION DISTINCT
+
+SELECT *
+FROM
+`still-tensor-378918.Cyclistic_casestudy.202301-divvy-dataset`
+UNION DISTINCT
+
+SELECT *
+FROM
+`still-tensor-378918.Cyclistic_casestudy.202302-divvy-dataset`
+UNION DISTINCT
+
+SELECT *
+FROM
+`still-tensor-378918.Cyclistic_casestudy.202303-divvy-tripdata -`
+
 );
 
 
@@ -97,6 +129,114 @@ FROM
 
 /* Data Integrity check: The above code returned a merged 'combined_dataset' sheet containing 5,803,720 rows which was the original total of the twelve Cyclistic
 monthly spreadsheets individually. */
+
+
+   SELECT 
+  DISTINCT 
+  ride_id,
+  rideable_type,
+  started_at,
+  ended_at,
+  start_station_name,
+  start_station_id,
+  end_station_name,
+  end_station_id,
+  start_lat,
+  start_lng,
+  end_lat,
+  end_lng,
+  member_casual,
+  ride_length,
+  day_of_week
+  FROM
+  `still-tensor-378918.Cyclistic_casestudy.temp_combined_data`
+  WHERE
+  LENGTH (ride_id) = 16;
+
+/* Distinct id's only - 5802374, creating a new table for this */
+
+UPDATE `still-tensor-378918.Cyclistic_casestudy.temp_combined_data`
+SET rideable_type = 'classic_bike'
+WHERE rideable_type = 'docked_bike';
+
+
+/* 173747 rideable types of docked changed to classic */
+
+SELECT 
+DISTINCT
+ride_id
+FROM `still-tensor-378918.Cyclistic_casestudy.temp_combined_data`;
+
+
+/*  changing of rideable_type, as three types as electric, classic and NULL, Query to determine number of Null entries under this field.*/
+
+SELECT 
+DISTINCT
+rideable_type 
+FROM `still-tensor-378918.Cyclistic_casestudy.temp_combined_data`;
+
+SELECT
+rideable_type
+FROM `still-tensor-378918.Cyclistic_casestudy.temp_combined_data`
+WHERE
+rideable_type IS NULL;
+
+/*Only 1 null, may be end of rows, I will still remove upon cleaning*/
+
+/* check for trailing spaces, */
+SELECT 
+TRIM (ride_id, " ")
+FROM `still-tensor-378918.Cyclistic_casestudy.temp_combined_data`;
+
+SELECT 
+TRIM (rideable_type, " ")
+FROM `still-tensor-378918.Cyclistic_casestudy.temp_combined_data`;
+
+SELECT 
+TRIM (start_station_id, " ")
+FROM `still-tensor-378918.Cyclistic_casestudy.temp_combined_data`;
+
+SELECT 
+TRIM (end_station_id, " ")
+FROM `still-tensor-378918.Cyclistic_casestudy.temp_combined_data`;
+
+SELECT 
+TRIM (member_casual, " ")
+FROM `still-tensor-378918.Cyclistic_casestudy.temp_combined_data`;
+SELECT 
+TRIM (start_lat, " ")
+FROM `still-tensor-378918.Cyclistic_casestudy.temp_combined_data`;
+
+SELECT 
+TRIM (start_lng, " ")
+FROM `still-tensor-378918.Cyclistic_casestudy.temp_combined_data`;
+
+SELECT 
+TRIM (end_lat, " ")
+FROM `still-tensor-378918.Cyclistic_casestudy.temp_combined_data`;
+
+SELECT 
+TRIM (end_lng, " ")
+FROM `still-tensor-378918.Cyclistic_casestudy.temp_combined_data`;
+
+
+
+/* Check made for distinct value of member_casual field.*/
+
+
+/* Query to determining ended_at values smaller than started_at values, incorrect entries to be cleaned */
+
+DELETE FROM `still-tensor-378918.Cyclistic_casestudy.clean_ride_id`
+WHERE start_lat IS NULL OR start_lng IS NULL 
+OR end_lat IS NULL OR end_lng IS NULL;
+
+/* latitude and longitudinal null values removed */
+
+SELECT 
+DISTINCT
+member_casual 
+FROM `still-tensor-378918.Cyclistic_casestudy.ride_id_distinct`;
+
 
 /*All thirteen data fields are to be cleaned before data transformation for clearer data insights. Check of customer ID duplication
 1. ride_id*/
@@ -142,7 +282,37 @@ WHERE TIMESTAMP_DIFF(ended_at, started_at, MINUTE) <= 1 OR
 /*NOTE: Running the TIMESTAMP_DIFF function on ended_at, started_at resulted in 245,816 journeys not fulfilling our 
 requirement of more than 1 minute and less than 1440 minutes*/
 
-/*
+/* 
+
+SELECT 
+ started_at,
+ ended_at
+ FROM `still-tensor-378918.Cyclistic_casestudy.ride_id_distinct` 
+ WHERE 
+started_at > ended_at;
+
+/* 99 fall under this condition*/
+
+DELETE
+FROM `still-tensor-378918.Cyclistic_casestudy.ride_id_distinct` 
+ WHERE 
+started_at > ended_at;
+
+SELECT *
+FROM `still-tensor-378918.Cyclistic_casestudy.combined_divvy_data_`
+WHERE TIMESTAMP_DIFF(ended_at, started_at, MINUTE) <= 1 OR
+   TIMESTAMP_DIFF(ended_at, started_at, MINUTE) >= 1440;
+
+/* 245758 fields fall under this condition 1 - 1440*/
+DELETE
+FROM `still-tensor-378918.Cyclistic_casestudy.combined_divvy_data_`
+WHERE TIMESTAMP_DIFF(ended_at, started_at, MINUTE) <= 1 OR
+   TIMESTAMP_DIFF(ended_at, started_at, MINUTE) >= 1440;
+
+
+/* TOTAL rows in dataset now 5556616 following deletion */
+
+
 4. Explore the start_station, end_station data to ensure validity and consistency*/
 
 
@@ -165,6 +335,7 @@ SELECT end_station_id, count(*)
 FROM `still-tensor-378918.Bikeshare_dataset.combined_dataset`
 GROUP BY end_station_id
 ORDER BY end_station_id;
+/* nulls in order, 
 
 SELECT 
 COUNT(DISTINCT(start_station_name)) AS unq_startname,
