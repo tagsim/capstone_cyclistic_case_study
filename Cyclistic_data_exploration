@@ -501,5 +501,202 @@ SELECT AVG(ride_length_minutes) AS avg,
             MAX(ride_length_minutes) AS max 
             
             FROM `still-tensor-378918.Cyclistic_Capstone_Project.cyclistic_newest_divvydataset` 
+/*average for casual and member*/
+SELECT
+  AVG(ride_length_minutes) AS avg_ride_length_mins,
+  member_casual
+FROM
+  `still-tensor-378918.Cyclistic_Capstone_Project.cyclistic_newest_divvydataset`
+WHERE
+  ride_length_minutes > 1
+  AND ride_length_minutes < 1440
+  AND member_casual = 'member'
+  OR member_casual = 'casual'
+GROUP BY
+  member_casual
+ORDER BY
+  member_casual;
+
+/*day of week analysis*/
+
+SELECT day_of_week,
+            AVG(ride_length_minutes) AS member_avg_ride_length
+FROM `still-tensor-378918.Cyclistic_Capstone_Project.cyclistic_newest_divvydataset`
+WHERE member_casual= 'member'
+            AND ride_length_minutes > 0
+            AND ride_length_minutes < 1440
+GROUP BY day_of_week
+ORDER BY day_of_week
+
+
+/*ride length average, weekly analysis */
+
+SELECT
+  day_of_week AS day_of_week_summary,
+  member_casual AS member_or_casual_summary,
+  AVG(ride_length_minutes) AS avg_ride_length_summary
+FROM
+  `still-tensor-378918.Cyclistic_Capstone_Project.cyclistic_newest_divvydataset`
+WHERE
+  ride_length_minutes > 1
+  AND ride_length_minutes < 1440
+GROUP BY
+  day_of_week,
+  member_casual
+ORDER BY
+  day_of_week,
+  member_casual;
+
+/*monthly average has been calculated here */
+SELECT 
+  month AS montly_average,
+            AVG(ride_length_minutes) AS member_avg_ride_length
+FROM `still-tensor-378918.Cyclistic_Capstone_Project.cyclistic_newest_divvydataset`
+WHERE 
+             ride_length_minutes >= 1
+            AND ride_length_minutes <= 1440
+GROUP BY month, 
+member_casual
+ORDER BY month,
+member_casual;
+
+/*calcuation of total rides for both*/
+SELECT member_casual AS member_casual_total,
+            COUNT(*) AS total_rides
+FROM `still-tensor-378918.Cyclistic_Capstone_Project.cyclistic_newest_divvydataset`
+WHERE ride_length_minutes > 0
+            AND ride_length_minutes < 1440
+GROUP BY member_casual
+
+/*rides taken by all in a week, daily*/
+SELECT day_of_week AS day_of_week_ride_count,
+member_casual AS member_casual_weekly_ride_count,
+            COUNT(*) AS rides_weekly_total
+FROM `still-tensor-378918.Cyclistic_Capstone_Project.cyclistic_newest_divvydataset`
+WHERE ride_length_minutes >= 1
+            AND ride_length_minutes <= 1440
+            AND member_casual = 'member'
+            OR member_casual = 'casual'
+GROUP BY day_of_week,
+member_casual
+ORDER BY day_of_week,
+member_casual;
+
+/*monthly ride data */
+SELECT month AS month_ride,
+member_casual AS member_casual_monthly,
+            COUNT(*) AS rides_taken_by_month
+FROM still-tensor-378918.Cyclistic_Capstone_Project.cyclistic_newest_divvydataset
+WHERE ride_length_minutes > 1
+            AND ride_length_minutes < 1440
+            AND member_casual = 'member'
+            OR
+             member_casual = 'casual'
+GROUP BY month,
+member_casual
+ORDER BY month,
+member_casual;
+/* hourly analysis*/
+
+SELECT CASE
+            WHEN day_of_week = 1 THEN 'Sunday'
+            WHEN day_of_week = 2 THEN 'Monday'
+            WHEN day_of_week = 3 THEN 'Tuesday'
+            WHEN day_of_week = 4 THEN 'Wednesday'
+            WHEN day_of_week = 5 THEN 'Thursday'
+            WHEN day_of_week = 6 THEN 'Friday'
+            WHEN day_of_week = 7 THEN 'Saturday' END AS day_of_the_week,
+            EXTRACT(hour FROM started_at) AS hour,
+            COUNT(*) AS member_rides_count_hourly
+FROM still-tensor-378918.Cyclistic_Capstone_Project.cyclistic_newest_divvydataset
+WHERE member_casual = 'member'
+            AND ride_length_minutes > 0
+            AND ride_length_minutes < 1440
+GROUP BY day_of_week, hour
+ORDER BY day_of_week, hour;
+
+SELECT CASE
+            WHEN day_of_week = 1 THEN 'Sunday'
+            WHEN day_of_week = 2 THEN 'Monday'
+            WHEN day_of_week = 3 THEN 'Tuesday'
+            WHEN day_of_week = 4 THEN 'Wednesday'
+            WHEN day_of_week = 5 THEN 'Thursday'
+            WHEN day_of_week = 6 THEN 'Friday'
+            WHEN day_of_week = 7 THEN 'Saturday' END AS day_of_the_week,
+            EXTRACT(hour FROM started_at) AS hour,
+            COUNT(*) AS casual_rides_count_hourly
+FROM still-tensor-378918.Cyclistic_Capstone_Project.cyclistic_newest_divvydataset
+WHERE member_casual = 'casual'
+            AND ride_length_minutes > 0
+            AND ride_length_minutes < 1440
+GROUP BY day_of_week, hour
+ORDER BY day_of_week, hour;
+
+/* ride type by member or casual */
+
+SELECT rideable_type, 
+member_casual,
+            COUNT(*) AS casual_rides_choice_count
+FROM still-tensor-378918.Cyclistic_Capstone_Project.cyclistic_newest_divvydataset
+WHERE ride_length_minutes > 1
+            AND ride_length_minutes < 1440
+            AND member_casual = 'casual'
+            
+GROUP BY rideable_type,
+member_casual;
+
+SELECT rideable_type, 
+member_casual,
+            COUNT(*) AS member_rides_choice_count
+FROM still-tensor-378918.Cyclistic_Capstone_Project.cyclistic_newest_divvydataset
+WHERE ride_length_minutes > 1
+            AND ride_length_minutes < 1440
+            AND member_casual = 'member'
+            
+GROUP BY rideable_type,
+member_casual;
+
+/* analysis of start and end stations by membership and casual users */
+SELECT start_station_name,
+            COUNT(*) AS count_member_rides
+FROM still-tensor-378918.Cyclistic_Capstone_Project.cyclistic_newest_divvydataset
+WHERE ride_length_minutes < 1440
+            AND ride_length_minutes > 0
+            AND member_casual = 'member'
+            AND start_station_name != 'null'
+GROUP BY start_station_name
+ORDER BY COUNT(*) DESC;
+
+SELECT start_station_name,
+            COUNT(*) AS count_casual_rides
+FROM still-tensor-378918.Cyclistic_Capstone_Project.cyclistic_newest_divvydataset
+WHERE ride_length_minutes < 1440
+            AND ride_length_minutes > 0
+            AND member_casual = 'casual'
+            AND start_station_name != 'null'
+GROUP BY start_station_name
+ORDER BY COUNT(*) DESC;
+
+SELECT end_station_name,
+            COUNT(*) AS count_member_rides
+FROM still-tensor-378918.Cyclistic_Capstone_Project.cyclistic_newest_divvydataset
+WHERE ride_length_minutes < 1440
+            AND ride_length_minutes > 0
+            AND member_casual = 'member'
+            AND end_station_name != 'null'
+GROUP BY end_station_name
+ORDER BY COUNT(*) DESC;
+
+SELECT end_station_name,
+            COUNT(*) AS count_member_rides
+FROM still-tensor-378918.Cyclistic_Capstone_Project.cyclistic_newest_divvydataset
+WHERE ride_length_minutes < 1440
+            AND ride_length_minutes > 0
+            AND member_casual = 'casual'
+            AND end_station_name != 'null'
+GROUP BY end_station_name
+ORDER BY COUNT(*) DESC;
+
+/*CREATING  NEW TABLE TO ANALYSE STATION START AND END*/
 
 
